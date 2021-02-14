@@ -23,10 +23,6 @@ class MainAdapter(val result : ArrayList<MainModel>): RecyclerView.Adapter<MainA
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val res = result[position]
-        holder.binding.apply {
-            tvPhotos.text = result[position].title
-            Glide.with(holder.itemView).load(res.url).into(holder.binding.imgPhotos)
-        }
 
     }
     fun setupData(data : List<MainModel>){

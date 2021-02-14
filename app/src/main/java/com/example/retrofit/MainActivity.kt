@@ -1,4 +1,4 @@
-    package com.example.retrofit
+     package com.example.retrofit
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -39,21 +39,17 @@ import retrofit2.Response
     private fun getDataFromAPI(){
 
         ApiService.endpoint.getPhotos()
-                .enqueue(object : Callback<List<MainModel>>{
-                    override fun onFailure(call: Call<List<MainModel>>, t: Throwable) {
+                .enqueue(object : Callback<MainModel>{
+                    override fun onFailure(call: Call<MainModel>, t: Throwable) {
                         log( t.toString())
                     }
 
-                    override fun onResponse(call: Call<List<MainModel>>, response: Response<List<MainModel>>) {
+                    override fun onResponse(call: Call<MainModel>, response: Response<MainModel>) {
 
                         if (response.isSuccessful){
-                            val result = response.body()
-                            if (result != null) {
-                                showPhotos(result)
+                                showData(response.body()!!)
                             }
                         }
-                    }
-
                 })
 
     }
@@ -63,9 +59,11 @@ import retrofit2.Response
         Log.d(TAG, message)
 
     }
-    private fun showPhotos(photos : List<MainModel>){
-        val result = photos
-        mainAdapter.setupData(result)
+    private fun showData(data : MainModel){
+        val results = data.result
+        for (result in results){
+            log("title : ${result.title}")
+        }
 
     }
 
