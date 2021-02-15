@@ -1,9 +1,12 @@
      package com.example.retrofit
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.retrofit.Adapter.MainAdapter
 import com.example.retrofit.Model.MainModel
@@ -30,22 +33,31 @@ import retrofit2.Response
     }
 
     private fun setupRecycler(){
-        mainAdapter = MainAdapter(arrayListOf())
+        mainAdapter = MainAdapter(arrayListOf(), object : MainAdapter.ViewClickListener{
+            override fun onViewClickListener(result: MainModel.Result) {
+                Toast.makeText(applicationContext, result.title, Toast.LENGTH_SHORT).show()
+                startActivity(Intent(applicationContext, DetailActivity::class.java)
+                    .putExtra("title", result.title)
+                    .putExtra("image", result.image)
+                )
+            }
+        })
         binding.rvData.apply {
             layoutManager = LinearLayoutManager(applicationContext)
             adapter = mainAdapter
         }
     }
     private fun getDataFromAPI(){
-
+        binding.ProgressBar.visibility = View.VISIBLE
         ApiService.endpoint.getPhotos()
                 .enqueue(object : Callback<MainModel>{
                     override fun onFailure(call: Call<MainModel>, t: Throwable) {
+                        binding.ProgressBar.visibility = View.GONE
                         log( t.toString())
                     }
 
                     override fun onResponse(call: Call<MainModel>, response: Response<MainModel>) {
-
+                        binding.ProgressBar.visibility = View.GONE
                         if (response.isSuccessful){
                                 showData(response.body()!!)
                             }
@@ -61,9 +73,7 @@ import retrofit2.Response
     }
     private fun showData(data : MainModel){
         val results = data.result
-        for (result in results){
-            log("title : ${result.title}")
-        }
+        mainAdapter.setupData(results)
 
     }
 
