@@ -1,9 +1,12 @@
 package com.example.retrofit.Model
 
 
-data class MainModel (val result : ArrayList<Result>){
-    data class Result( val id : Int,
-                       val title : String,
-                       val image : String)
-}
+data class MainModel (
+    var id : Int,
+    var email : String,
+    val first_name : String,
+    var last_name : String,
+    var avatar : String
+)
+
 
